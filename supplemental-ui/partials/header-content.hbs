@@ -5,8 +5,7 @@
         {{> k-lockup width=117 height=27}}
       </a>
       {{#if env.SITE_SEARCH_PROVIDER}}
-      {{!-- Search sits right next to the name, as on mise.jdx.dev. "/" or Ctrl/Cmd+K focuses it
-      (js/kwenza.js). --}}
+      {{!-- "/" or Ctrl/Cmd+K focuses search (js/kwenza.js). --}}
       <div class="navbar-item search hide-for-print">
         <div id="search-field" class="field">
           <input id="search-input" type="text" placeholder="Search" aria-label="Search the docs" aria-keyshortcuts="/ Control+K Meta+K">

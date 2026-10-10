@@ -158,12 +158,29 @@ body {
   margin-right: 0.5rem;
 }
 
-/* Search right beside the name (as on mise.jdx.dev), not pushed to the far right. */
-.navbar-brand .navbar-item.search {
-  flex: none;
-  justify-content: flex-start;
+/* Home page: the header's name is collapsed while the big lockup is on screen and slides in
+   after it scrolls away (js/kwenza.js sets these classes; without it, nothing changes). Search and
+   the links are right-aligned, so nothing else moves when it does. */
+body.home .navbar-brand .k-brand {
+  max-width: 10rem;
+  overflow: hidden;
 }
 
+body.home.k-hero-ready .navbar-brand .k-brand {
+  transition: max-width 0.25s ease, opacity 0.25s ease, margin-right 0.25s ease;
+}
+
+body.home.k-hero-pending .navbar-brand .k-brand,
+body.home.k-hero-in-view .navbar-brand .k-brand {
+  max-width: 0;
+  margin-right: 0;
+  padding-left: 0;
+  padding-right: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Search sits at the right of the bar, just before the links, where the default UI puts it. */
 body #search-input {
   width: 13rem;
   padding-left: 2rem;
@@ -189,11 +206,6 @@ body #search-input {
 }
 
 @media screen and (max-width: 1023.5px) {
-  .navbar-brand .navbar-item.search {
-    flex: auto;
-    justify-content: flex-end;
-  }
-
   body #search-input {
     width: 100%;
     max-width: 13rem;

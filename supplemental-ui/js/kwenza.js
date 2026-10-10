@@ -1,4 +1,5 @@
-// kwenza.dev's only script of its own: the light/dark switch and a search shortcut.
+// kwenza.dev's only script of its own: the light/dark switch, a search shortcut, and the home
+// page's header name, which only appears once the big lockup has scrolled out of view.
 //
 // The theme follows the OS (prefers-color-scheme) until someone flips the switch. Picking the
 // opposite of the OS theme is remembered in localStorage; picking the same as the OS theme forgets
@@ -55,4 +56,21 @@
       input.focus()
     }
   })
+
+  // Home page: the header leaves out the name while the big lockup is on screen, so it isn't
+  // shown twice, and slides it in once the big one scrolls away. Without JavaScript (or
+  // IntersectionObserver) the header simply always shows it.
+  var hero = document.querySelector('.k-hero-lockup')
+  if (hero && 'IntersectionObserver' in window) {
+    var body = document.body
+    body.classList.add('k-hero-pending')
+    new IntersectionObserver(function (entries) {
+      body.classList.toggle('k-hero-in-view', entries[0].isIntersecting)
+      if (body.classList.contains('k-hero-pending')) {
+        body.classList.remove('k-hero-pending')
+        // Animate changes from now on, not the first decision on load.
+        window.requestAnimationFrame(function () { body.classList.add('k-hero-ready') })
+      }
+    }, { rootMargin: '-56px 0px 0px 0px' }).observe(hero)
+  }
 })()
