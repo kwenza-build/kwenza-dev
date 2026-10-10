@@ -582,7 +582,19 @@ main.home .doc p {
 }
 
 .doc .demo .listingblock {
+  display: flex;
+  flex-direction: column;
   margin: 0;
+}
+
+/* Side by side, the shorter box stretches to match the taller one; the title stays outside it. */
+.doc .demo .listingblock > .content {
+  display: flex;
+  flex: 1;
+}
+
+.doc .demo .listingblock pre {
+  flex: 1;
 }
 
 .doc .demo .listingblock > .title {
@@ -596,12 +608,6 @@ main.home .doc p {
   font-size: 0.78rem;
   line-height: 1.6;
   padding: 1rem 1.25rem;
-  min-height: 100%;
-}
-
-.doc .demo .content,
-.doc .demo pre {
-  height: 100%;
 }
 
 /* Band 3: install */
