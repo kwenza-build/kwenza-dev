@@ -3,7 +3,8 @@
  *
  * The default UI hard-codes its colours, so the second half of this file restates each of its
  * colour rules with a --k-* token instead. Dark mode then only has to redefine the tokens. It
- * follows the OS (prefers-color-scheme) with no toggle, so the site needs no JavaScript for it.
+ * follows the OS (prefers-color-scheme) unless the header's switch has set data-theme on <html>
+ * (js/kwenza.js), and works without JavaScript.
  * If these overrides ever stop fitting in one readable file, that's the signal to fork the UI
  * bundle instead (kwenza's docs/research/kwenza-dev-design.adoc, section 3.2).
  *
@@ -52,8 +53,10 @@
   --k-hl-symbol: #8a3d6b;
 }
 
+/* Dark tokens, twice: once for the OS setting (unless the switch chose light), once for the
+   switch choosing dark. Keep the two blocks identical. */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     color-scheme: dark;
     --k-paper: #141518;
     --k-ink: #ece8e1;
@@ -74,6 +77,28 @@
     --k-hl-type: #8fb8e0;
     --k-hl-symbol: #d9a0c4;
   }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --k-paper: #141518;
+  --k-ink: #ece8e1;
+  --k-muted: #9a9da4;
+  --k-accent: #edb341;
+  --k-accent-text: #edb341;
+  --k-accent-hover: #f6cf7f;
+  --k-surface: #1b1d21;
+  --k-surface-strong: #24272c;
+  --k-line: #2c2f35;
+  --k-line-strong: #43474f;
+  --k-on-accent: #141518;
+  --k-shadow: rgba(0, 0, 0, 0.5);
+  --k-hl-comment: #868991;
+  --k-hl-keyword: #ece8e1;
+  --k-hl-string: #a5c98a;
+  --k-hl-title: #edb341;
+  --k-hl-type: #8fb8e0;
+  --k-hl-symbol: #d9a0c4;
 }
 
 /* ---- Type --------------------------------------------------------------------------------- */
@@ -123,9 +148,127 @@ body {
   padding-bottom: 0;
 }
 
-.k-lockup {
+.k-lockup,
+.k-mark {
   display: block;
   color: var(--k-ink);
+}
+
+.navbar-brand .k-brand {
+  margin-right: 0.5rem;
+}
+
+/* Search right beside the name (as on mise.jdx.dev), not pushed to the far right. */
+.navbar-brand .navbar-item.search {
+  flex: none;
+  justify-content: flex-start;
+}
+
+body #search-input {
+  width: 13rem;
+  padding-left: 2rem;
+}
+
+#search-field {
+  position: relative;
+}
+
+#search-field::before {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  left: 0.6rem;
+  width: 0.95rem;
+  height: 0.95rem;
+  transform: translateY(-50%);
+  background: var(--k-muted);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round'%3E%3Ccircle cx='7' cy='7' r='4.75'/%3E%3Cpath d='M10.5 10.5l3.75 3.75'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round'%3E%3Ccircle cx='7' cy='7' r='4.75'/%3E%3Cpath d='M10.5 10.5l3.75 3.75'/%3E%3C/svg%3E") center / contain no-repeat;
+  pointer-events: none;
+}
+
+@media screen and (max-width: 1023.5px) {
+  .navbar-brand .navbar-item.search {
+    flex: auto;
+    justify-content: flex-end;
+  }
+
+  body #search-input {
+    width: 100%;
+    max-width: 13rem;
+  }
+}
+
+/* Theme switch and GitHub icon, at the end of the bar. */
+.navbar-end .k-tools {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  padding-left: 1rem;
+}
+
+.k-theme-switch {
+  position: relative;
+  width: 2.5rem;
+  height: 1.375rem;
+  padding: 0;
+  border: 1px solid var(--k-line-strong);
+  border-radius: 999px;
+  background: var(--k-surface);
+  cursor: pointer;
+}
+
+.k-theme-knob {
+  position: absolute;
+  top: 0.125rem;
+  left: 0.125rem;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+  background: var(--k-paper);
+  box-shadow: 0 1px 2px var(--k-shadow);
+  transition: transform 0.2s ease;
+}
+
+.k-theme-knob::after {
+  content: "";
+  position: absolute;
+  inset: 0.15rem;
+  background: var(--k-ink);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round'%3E%3Ccircle cx='8' cy='8' r='3'/%3E%3Cpath d='M8 1.5v1.25M8 13.25v1.25M1.5 8h1.25M13.25 8h1.25M3.4 3.4l.9.9M11.7 11.7l.9.9M3.4 12.6l.9-.9M11.7 4.3l.9-.9'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round'%3E%3Ccircle cx='8' cy='8' r='3'/%3E%3Cpath d='M8 1.5v1.25M8 13.25v1.25M1.5 8h1.25M13.25 8h1.25M3.4 3.4l.9.9M11.7 11.7l.9.9M3.4 12.6l.9-.9M11.7 4.3l.9-.9'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+.k-theme-switch[aria-checked="true"] .k-theme-knob {
+  transform: translateX(1.125rem);
+}
+
+.k-theme-switch[aria-checked="true"] .k-theme-knob::after {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='black' stroke-width='1.5' stroke-linejoin='round'%3E%3Cpath d='M13.5 9.75A5.75 5.75 0 0 1 6.25 2.5a5.75 5.75 0 1 0 7.25 7.25z'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='black' stroke-width='1.5' stroke-linejoin='round'%3E%3Cpath d='M13.5 9.75A5.75 5.75 0 0 1 6.25 2.5a5.75 5.75 0 1 0 7.25 7.25z'/%3E%3C/svg%3E");
+}
+
+.k-theme-switch:focus-visible,
+.k-icon-link:focus-visible {
+  outline: 2px solid var(--k-accent);
+  outline-offset: 2px;
+}
+
+.k-icon-link {
+  display: flex;
+  color: var(--k-muted);
+}
+
+.k-icon-link:hover {
+  color: var(--k-ink);
+}
+
+/* In the narrow-screen menu the tools sit on their own row under the links. */
+@media screen and (max-width: 1023.5px) {
+  .navbar-end .k-tools {
+    padding: 0.75rem 1rem;
+  }
 }
 
 .k-block {
@@ -136,7 +279,7 @@ body {
   background-color: var(--k-ink);
 }
 
-#search-input {
+body #search-input {
   color: var(--k-ink);
   background: var(--k-surface);
   border: 1px solid var(--k-line-strong);
@@ -147,7 +290,7 @@ body {
   color: var(--k-muted);
 }
 
-#search-input:focus {
+body #search-input:focus {
   outline: 2px solid var(--k-accent);
   outline-offset: 0;
 }
@@ -475,13 +618,21 @@ footer.footer {
 
 /* The default UI's icons are dark-grey SVG images; lighten them on a dark page. */
 @media (prefers-color-scheme: dark) {
-  .home-link,
-  .nav-toggle,
-  .nav-item-toggle,
-  .nav-panel-explore .context .version::after,
-  .page-versions .version-menu-toggle {
+  :root:not([data-theme="light"]) .home-link,
+  :root:not([data-theme="light"]) .nav-toggle,
+  :root:not([data-theme="light"]) .nav-item-toggle,
+  :root:not([data-theme="light"]) .nav-panel-explore .context .version::after,
+  :root:not([data-theme="light"]) .page-versions .version-menu-toggle {
     filter: invert(0.85);
   }
+}
+
+:root[data-theme="dark"] .home-link,
+:root[data-theme="dark"] .nav-toggle,
+:root[data-theme="dark"] .nav-item-toggle,
+:root[data-theme="dark"] .nav-panel-explore .context .version::after,
+:root[data-theme="dark"] .page-versions .version-menu-toggle {
+  filter: invert(0.85);
 }
 
 /* Search results (@antora/lunr-extension). Its search.css is added to the page at runtime, after

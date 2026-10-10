@@ -5,3 +5,5 @@
     <link rel="icon" href="{{{uiRootPath}}}/img/favicon-32.png" type="image/png" sizes="32x32">
     <link rel="apple-touch-icon" href="{{{uiRootPath}}}/img/apple-touch-icon.png">
     <link rel="stylesheet" href="{{{uiRootPath}}}/css/kwenza.css">
+    {{!-- Apply a remembered light/dark choice before first paint (js/kwenza.js sets it). --}}
+    <script>try{var t=localStorage.getItem('kwenza-theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch(e){}</script>
