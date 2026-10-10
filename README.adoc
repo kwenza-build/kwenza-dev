@@ -56,3 +56,7 @@ Then rebuild, and check the home page and a docs page in both light and dark mod
 
 Current copy: downloaded 2026-10-10, SHA-256
 `e0ac81aad26961a9cd3cf9bce692a598eff4a1bd2822ce73c9cdc13a15a1e70d`.
+
+== License
+
+Apache License 2.0, the same as kwenza itself. See link:LICENSE[LICENSE].
