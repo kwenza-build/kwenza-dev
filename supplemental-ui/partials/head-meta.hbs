@@ -1,0 +1,9 @@
+    <meta name="color-scheme" content="light dark">
+    <meta name="theme-color" content="#FAF8F4" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#141518" media="(prefers-color-scheme: dark)">
+    <link rel="icon" href="{{{uiRootPath}}}/img/favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="{{{uiRootPath}}}/img/favicon-32.png" type="image/png" sizes="32x32">
+    <link rel="apple-touch-icon" href="{{{uiRootPath}}}/img/apple-touch-icon.png">
+    <link rel="stylesheet" href="{{{uiRootPath}}}/css/kwenza.css">
+    {{!-- Apply a remembered light/dark choice before first paint (js/kwenza.js sets it). --}}
+    <script>try{var t=localStorage.getItem('kwenza-theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch(e){}</script>

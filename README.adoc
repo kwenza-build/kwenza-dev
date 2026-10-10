@@ -2,14 +2,63 @@
 
 Source for https://kwenza.dev, the home page and documentation site for
 https://github.com/kwenza-build/kwenza[kwenza], a simple, declarative build tool for the JVM.
+The reasoning behind this setup is kwenza's
+https://github.com/kwenza-build/kwenza/blob/main/docs/research/kwenza-dev-design.adoc[site design research].
 
-Nothing is built here yet. The planned setup is described in kwenza's
-https://github.com/kwenza-build/kwenza/blob/main/docs/research/kwenza-dev-design.adoc[site design research]:
+== What's here
 
-* an https://antora.org[Antora] site whose content comes from the kwenza repo's `docs/` directory;
-* Antora's default UI plus a small supplemental UI with kwenza's brand;
-* `@antora/lunr-extension` for client-side search;
-* deployment to GitHub Pages through GitHub Actions, served on the `kwenza.dev` domain.
+* `antora-playbook.yml`: one https://antora.org[Antora] site with two content sources: `home/`
+  here (the landing page, published at `/`) and the kwenza repo's `docs/` (the manual, published
+  under `/docs/`). The manual is written and reviewed in the kwenza repo, next to the code.
+* `ui/ui-bundle.zip`: Antora's default UI, vendored (see below).
+* `supplemental-ui/`: kwenza's overlay on the default UI. The header, footer, favicon links, the
+  home page layout, and `css/kwenza.css` (brand tokens and a dark mode that follows the OS).
+  IBM Plex Mono is self-hosted for code (SIL Open Font License, `fonts/IBMPlexMono-OFL.txt`).
+* `lib/highlight.js`: highlights source blocks at build time with the full `highlight.js` npm
+  package (the default UI's in-browser copy has no TOML grammar), so pages ship highlighted HTML
+  and load no highlighting script.
+* `.github/workflows/deploy.yml`: builds on every pull request; on `main`, daily, and on demand
+  it also deploys to GitHub Pages.
+
+== Build it locally
+
+Needs Node 20 or newer, and a kwenza checkout at `./kwenza` (git-ignored):
+
+[source,bash]
+----
+git clone https://github.com/kwenza-build/kwenza.git kwenza   # or: ln -s ../kwenza kwenza
+npm ci
+npx antora antora-playbook.yml
+----
+
+The site is written to `build/site/`. Antora reads `./kwenza`'s working tree, uncommitted
+changes included, so you can preview a docs change before pushing it. Any warning (a broken
+xref, a missing include) fails the build.
+
+== Pull requests that span both repos
+
+A pull request here builds the docs from kwenza's `main`, unless kwenza has a branch with the
+same name as this pull request's branch. Then it builds from that branch, so a change touching
+both repos can be checked here before either side merges. The deploy always uses kwenza's
+`main`.
+
+== Updating the default UI
+
+`ui/ui-bundle.zip` is a copy of the default UI's stable bundle. It's vendored rather than
+fetched at build time so every build uses the exact stylesheet `kwenza.css` was written against,
+and so the build never depends on GitLab being reachable. To update it:
+
+[source,bash]
+----
+curl -fL -o ui/ui-bundle.zip \
+  'https://gitlab.com/antora/antora-ui-default/-/jobs/artifacts/HEAD/raw/build/ui-bundle.zip?job=bundle-stable'
+----
+
+Then rebuild, and check the home page and a docs page in both light and dark mode:
+`kwenza.css` restates the default UI's colour rules, so a new bundle may need new overrides.
+
+Current copy: downloaded 2026-10-10, SHA-256
+`e0ac81aad26961a9cd3cf9bce692a598eff4a1bd2822ce73c9cdc13a15a1e70d`.
 
 == License
 

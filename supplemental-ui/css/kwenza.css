@@ -1,0 +1,935 @@
+/*
+ * kwenza.dev: brand tokens, dark mode and the home page, layered over Antora's default UI.
+ *
+ * The default UI hard-codes its colours, so the second half of this file restates each of its
+ * colour rules with a --k-* token instead. Dark mode then only has to redefine the tokens. It
+ * follows the OS (prefers-color-scheme) unless the header's switch has set data-theme on <html>
+ * (js/kwenza.js), and works without JavaScript.
+ * If these overrides ever stop fitting in one readable file, that's the signal to fork the UI
+ * bundle instead (kwenza's docs/research/kwenza-dev-design.adoc, section 3.2).
+ *
+ * Palette: kwenza-dev-design.adoc section 4.2. The tokens below the first five are derived
+ * neutrals for surfaces and rules, chosen to sit between paper and ink.
+ */
+
+@font-face {
+  font-family: "IBM Plex Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(../fonts/IBMPlexMono-Regular-Latin1.woff2) format("woff2");
+}
+
+@font-face {
+  font-family: "IBM Plex Mono";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(../fonts/IBMPlexMono-SemiBold-Latin1.woff2) format("woff2");
+}
+
+:root {
+  color-scheme: light;
+  --k-paper: #faf8f4;
+  --k-ink: #16181d;
+  --k-muted: #5d6068;
+  --k-accent: #b87c0c;
+  --k-accent-text: #8f5e00;
+  --k-accent-hover: #6e4800;
+  --k-surface: #f2eee6;
+  --k-surface-strong: #e9e3d8;
+  --k-line: #e2dcd0;
+  --k-line-strong: #c9c1b3;
+  --k-on-accent: #16181d;
+  --k-shadow: rgba(22, 24, 29, 0.12);
+  --k-font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --k-font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  /* Syntax highlighting: muted, so the accent stays the only loud colour on the page. */
+  --k-hl-comment: #7a7d84;
+  --k-hl-keyword: #16181d;
+  --k-hl-string: #3f6b2a;
+  --k-hl-title: #8f5e00;
+  --k-hl-type: #2f5d8a;
+  --k-hl-symbol: #8a3d6b;
+}
+
+/* Dark tokens, twice: once for the OS setting (unless the switch chose light), once for the
+   switch choosing dark. Keep the two blocks identical. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --k-paper: #141518;
+    --k-ink: #ece8e1;
+    --k-muted: #9a9da4;
+    --k-accent: #edb341;
+    --k-accent-text: #edb341;
+    --k-accent-hover: #f6cf7f;
+    --k-surface: #1b1d21;
+    --k-surface-strong: #24272c;
+    --k-line: #2c2f35;
+    --k-line-strong: #43474f;
+    --k-on-accent: #141518;
+    --k-shadow: rgba(0, 0, 0, 0.5);
+    --k-hl-comment: #868991;
+    --k-hl-keyword: #ece8e1;
+    --k-hl-string: #a5c98a;
+    --k-hl-title: #edb341;
+    --k-hl-type: #8fb8e0;
+    --k-hl-symbol: #d9a0c4;
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --k-paper: #141518;
+  --k-ink: #ece8e1;
+  --k-muted: #9a9da4;
+  --k-accent: #edb341;
+  --k-accent-text: #edb341;
+  --k-accent-hover: #f6cf7f;
+  --k-surface: #1b1d21;
+  --k-surface-strong: #24272c;
+  --k-line: #2c2f35;
+  --k-line-strong: #43474f;
+  --k-on-accent: #141518;
+  --k-shadow: rgba(0, 0, 0, 0.5);
+  --k-hl-comment: #868991;
+  --k-hl-keyword: #ece8e1;
+  --k-hl-string: #a5c98a;
+  --k-hl-title: #edb341;
+  --k-hl-type: #8fb8e0;
+  --k-hl-symbol: #d9a0c4;
+}
+
+/* ---- Type --------------------------------------------------------------------------------- */
+
+html,
+body,
+button,
+input {
+  font-family: var(--k-font-sans);
+}
+
+code,
+kbd,
+pre,
+.doc pre,
+.doc code {
+  font-family: var(--k-font-mono);
+}
+
+/* ---- The default UI's colour rules, restated with tokens ---------------------------------- */
+
+body {
+  background: var(--k-paper);
+  color: var(--k-ink);
+}
+
+@supports (scrollbar-width: thin) {
+  html { scrollbar-color: var(--k-line-strong) var(--k-surface); }
+  body * { scrollbar-color: var(--k-line-strong) transparent; }
+}
+
+/* Header: paper, not the default UI's #191919 bar, with the lockup in ink. */
+.navbar {
+  background: var(--k-paper);
+  color: var(--k-ink);
+  border-bottom: 1px solid var(--k-line);
+}
+
+.navbar-brand .navbar-item,
+.navbar-item,
+.navbar-link {
+  color: var(--k-ink);
+}
+
+.navbar-brand .k-brand {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.k-lockup,
+.k-mark {
+  display: block;
+  color: var(--k-ink);
+}
+
+.navbar-brand .k-brand {
+  margin-right: 0.5rem;
+}
+
+/* Home page: the header's name is collapsed while the big lockup is on screen and slides in
+   after it scrolls away (js/kwenza.js sets these classes; without it, nothing changes). Search and
+   the links are right-aligned, so nothing else moves when it does. */
+body.home .navbar-brand .k-brand {
+  max-width: 10rem;
+  overflow: hidden;
+}
+
+body.home.k-hero-ready .navbar-brand .k-brand {
+  transition: max-width 0.25s ease, opacity 0.25s ease, margin-right 0.25s ease;
+}
+
+body.home.k-hero-pending .navbar-brand .k-brand,
+body.home.k-hero-in-view .navbar-brand .k-brand {
+  max-width: 0;
+  margin-right: 0;
+  padding-left: 0;
+  padding-right: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Search sits at the right of the bar, just before the links, where the default UI puts it. */
+body #search-input {
+  width: 13rem;
+  padding-left: 2rem;
+}
+
+#search-field {
+  position: relative;
+}
+
+#search-field::before {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  left: 0.6rem;
+  width: 0.95rem;
+  height: 0.95rem;
+  transform: translateY(-50%);
+  background: var(--k-muted);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round'%3E%3Ccircle cx='7' cy='7' r='4.75'/%3E%3Cpath d='M10.5 10.5l3.75 3.75'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round'%3E%3Ccircle cx='7' cy='7' r='4.75'/%3E%3Cpath d='M10.5 10.5l3.75 3.75'/%3E%3C/svg%3E") center / contain no-repeat;
+  pointer-events: none;
+}
+
+@media screen and (max-width: 1023.5px) {
+  body #search-input {
+    width: 100%;
+    max-width: 13rem;
+  }
+}
+
+/* Theme switch and GitHub icon, at the end of the bar. */
+.navbar-end .k-tools {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  padding-left: 1rem;
+}
+
+.k-theme-switch {
+  position: relative;
+  width: 2.5rem;
+  height: 1.375rem;
+  padding: 0;
+  border: 1px solid var(--k-line-strong);
+  border-radius: 999px;
+  background: var(--k-surface);
+  cursor: pointer;
+}
+
+.k-theme-knob {
+  position: absolute;
+  top: 0.125rem;
+  left: 0.125rem;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+  background: var(--k-paper);
+  box-shadow: 0 1px 2px var(--k-shadow);
+  transition: transform 0.2s ease;
+}
+
+.k-theme-knob::after {
+  content: "";
+  position: absolute;
+  inset: 0.15rem;
+  background: var(--k-ink);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round'%3E%3Ccircle cx='8' cy='8' r='3'/%3E%3Cpath d='M8 1.5v1.25M8 13.25v1.25M1.5 8h1.25M13.25 8h1.25M3.4 3.4l.9.9M11.7 11.7l.9.9M3.4 12.6l.9-.9M11.7 4.3l.9-.9'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round'%3E%3Ccircle cx='8' cy='8' r='3'/%3E%3Cpath d='M8 1.5v1.25M8 13.25v1.25M1.5 8h1.25M13.25 8h1.25M3.4 3.4l.9.9M11.7 11.7l.9.9M3.4 12.6l.9-.9M11.7 4.3l.9-.9'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+.k-theme-switch[aria-checked="true"] .k-theme-knob {
+  transform: translateX(1.125rem);
+}
+
+.k-theme-switch[aria-checked="true"] .k-theme-knob::after {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='black' stroke-width='1.5' stroke-linejoin='round'%3E%3Cpath d='M13.5 9.75A5.75 5.75 0 0 1 6.25 2.5a5.75 5.75 0 1 0 7.25 7.25z'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='black' stroke-width='1.5' stroke-linejoin='round'%3E%3Cpath d='M13.5 9.75A5.75 5.75 0 0 1 6.25 2.5a5.75 5.75 0 1 0 7.25 7.25z'/%3E%3C/svg%3E");
+}
+
+.k-theme-switch:focus-visible,
+.k-icon-link:focus-visible {
+  outline: 2px solid var(--k-accent);
+  outline-offset: 2px;
+}
+
+.k-icon-link {
+  display: flex;
+  color: var(--k-muted);
+}
+
+.k-icon-link:hover {
+  color: var(--k-ink);
+}
+
+/* In the narrow-screen menu the tools sit on their own row under the links. */
+@media screen and (max-width: 1023.5px) {
+  .navbar-end .k-tools {
+    padding: 0.75rem 1rem;
+  }
+}
+
+.k-block {
+  fill: var(--k-accent);
+}
+
+.navbar-burger span {
+  background-color: var(--k-ink);
+}
+
+body #search-input {
+  color: var(--k-ink);
+  background: var(--k-surface);
+  border: 1px solid var(--k-line-strong);
+  border-radius: 6px;
+}
+
+#search-input::placeholder {
+  color: var(--k-muted);
+}
+
+body #search-input:focus {
+  outline: 2px solid var(--k-accent);
+  outline-offset: 0;
+}
+
+@media screen and (max-width: 1023.5px) {
+  .navbar-menu {
+    background: var(--k-paper);
+    box-shadow: 0 8px 16px var(--k-shadow);
+  }
+
+  .navbar-menu a.navbar-item:hover {
+    background: var(--k-surface);
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .navbar-end > .navbar-item,
+  .navbar-end .navbar-link {
+    color: var(--k-ink);
+  }
+
+  .navbar-end > a.navbar-item:hover {
+    background: transparent;
+    color: var(--k-accent-text);
+  }
+}
+
+/* Left nav */
+.nav,
+.nav-panel-explore {
+  background: var(--k-surface);
+}
+
+@media screen and (min-width: 769px) {
+  .nav {
+    box-shadow: none;
+    border-right: 1px solid var(--k-line);
+  }
+}
+
+.nav-menu h3.title,
+.nav-menu .nav-link,
+.nav-menu .nav-text {
+  color: var(--k-ink);
+}
+
+.nav-menu .is-current-page > .nav-link {
+  color: var(--k-accent-text);
+  font-weight: 600;
+}
+
+.nav-panel-explore .context {
+  color: var(--k-muted);
+  box-shadow: 0 -1px 0 var(--k-line);
+}
+
+.nav-panel-explore .components {
+  background: var(--k-surface-strong);
+  box-shadow: inset 0 1px 5px var(--k-line);
+}
+
+.nav-panel-explore .component .version a {
+  background: var(--k-line-strong);
+  color: var(--k-ink);
+}
+
+.nav-panel-explore .component .is-current a {
+  background: var(--k-ink);
+  color: var(--k-paper);
+}
+
+/* Toolbar, breadcrumbs, page versions */
+.toolbar {
+  color: var(--k-muted);
+  background-color: var(--k-paper);
+  box-shadow: 0 1px 0 var(--k-line);
+}
+
+.toolbar .edit-this-page a,
+.page-versions .version.is-missing {
+  color: var(--k-muted);
+}
+
+.page-versions .version-menu {
+  background: var(--k-surface-strong);
+}
+
+/* On-page TOC */
+.toc-menu {
+  color: var(--k-muted);
+}
+
+.toc .toc-menu h3 {
+  color: var(--k-ink);
+}
+
+.toc .toc-menu a {
+  border-left: 2px solid var(--k-line);
+}
+
+.toc .toc-menu a:hover {
+  color: var(--k-accent-text);
+}
+
+.toc .toc-menu a.is-active {
+  border-left-color: var(--k-accent);
+  color: var(--k-ink);
+}
+
+.sidebar.toc .toc-menu a:focus {
+  background: var(--k-surface);
+}
+
+/* Article */
+
+/* The pages keep :toc: so GitHub renders a contents list; on the site the UI's own sidebar TOC
+   already does that job. */
+.doc > #toc {
+  display: none;
+}
+
+.doc {
+  color: var(--k-ink);
+}
+
+.doc h1,
+.doc h2,
+.doc h3,
+.doc h4,
+.doc h5,
+.doc h6 {
+  color: var(--k-ink);
+}
+
+.doc h1.sect0 {
+  background: var(--k-surface-strong);
+}
+
+.doc h2:not(.discrete) {
+  border-bottom: 1px solid var(--k-line);
+}
+
+.doc a {
+  color: var(--k-accent-text);
+}
+
+.doc a:hover {
+  color: var(--k-accent-hover);
+}
+
+.doc a.unresolved {
+  color: #d32f2f;
+}
+
+.doc .colist > table code,
+.doc p code,
+.doc thead code,
+.doc li code,
+.doc td code {
+  color: var(--k-ink);
+  background: var(--k-surface);
+}
+
+.doc table.tableblock,
+.doc table.tableblock > * > tr > * {
+  border-color: var(--k-line);
+}
+
+.doc table.stripes-all > tbody > tr,
+.doc table.stripes-even > tbody > tr:nth-of-type(2n),
+.doc table.stripes-hover > tbody > tr:hover,
+.doc table.stripes-odd > tbody > tr:nth-of-type(odd) {
+  background: var(--k-surface);
+}
+
+.doc table.tableblock > tfoot {
+  background: var(--k-surface-strong);
+}
+
+.doc .admonitionblock td.content {
+  background: var(--k-surface);
+}
+
+#preamble .abstract blockquote {
+  background: var(--k-surface-strong);
+  border-left-color: var(--k-line-strong);
+  color: var(--k-ink);
+}
+
+.doc .quoteblock,
+.doc .verseblock {
+  background: var(--k-surface);
+  border-left-color: var(--k-muted);
+  color: var(--k-muted);
+}
+
+.doc .quoteblock .attribution,
+.doc .admonitionblock .title,
+.doc .exampleblock .title,
+.doc .imageblock .title,
+.doc .listingblock .title,
+.doc .literalblock .title,
+.doc .openblock .title,
+.doc .videoblock .title,
+.doc table.tableblock caption,
+.doc details.result > summary {
+  color: var(--k-muted);
+}
+
+.doc .exampleblock > .content,
+.doc details.result > .content {
+  background: var(--k-paper);
+  border-color: var(--k-line-strong);
+}
+
+.doc .sidebarblock {
+  background: var(--k-surface-strong);
+}
+
+.doc .listingblock pre:not(.highlight),
+.doc .literalblock pre,
+.doc pre.highlight > code {
+  background: var(--k-surface);
+  color: var(--k-ink);
+  box-shadow: inset 0 0 1.75px var(--k-line-strong);
+}
+
+.doc .source-toolbox .copy-toast {
+  background-color: var(--k-ink);
+  color: var(--k-paper);
+}
+
+.doc .source-toolbox .copy-toast::after {
+  border-left-color: var(--k-ink);
+}
+
+.doc hr {
+  border-color: var(--k-line);
+}
+
+.doc kbd {
+  background: var(--k-surface);
+  border-color: var(--k-line-strong);
+  box-shadow: 0 1px 0 var(--k-line-strong), inset 0 0 0 0.1em var(--k-paper);
+}
+
+nav.pagination {
+  border-top-color: var(--k-line);
+}
+
+nav.pagination span::before,
+nav.pagination a::before,
+nav.pagination a::after {
+  color: var(--k-muted);
+}
+
+/* Footer */
+footer.footer {
+  background-color: var(--k-surface);
+  border-top: 1px solid var(--k-line);
+  color: var(--k-muted);
+}
+
+.footer a {
+  color: var(--k-ink);
+}
+
+/* Syntax highlighting (highlight.js classes) */
+.hljs-comment,
+.hljs-quote,
+.hljs-meta {
+  color: var(--k-hl-comment);
+}
+
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-subst {
+  color: var(--k-hl-keyword);
+}
+
+.hljs-doctag,
+.hljs-string {
+  color: var(--k-hl-string);
+}
+
+.hljs-section,
+.hljs-selector-id,
+.hljs-title {
+  color: var(--k-hl-title);
+}
+
+/* TOML table headers ([package], [dependencies]): the brackets the logo is drawn from. */
+.hljs-section {
+  font-weight: 600;
+}
+
+.hljs-attr,
+.hljs-class .hljs-title,
+.hljs-type,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-link,
+.hljs-regexp {
+  color: var(--k-hl-type);
+}
+
+.hljs-bullet,
+.hljs-symbol {
+  color: var(--k-hl-symbol);
+}
+
+/* Shell sessions ([source,console]): the prompt in the accent, the command in ink, and the
+   command's output muted, so it's clear at a glance what was typed and what kwenza printed. */
+.doc code.language-console {
+  color: var(--k-muted);
+}
+
+.doc code.language-console .hljs-meta.prompt_ {
+  color: var(--k-accent-text);
+}
+
+.doc code.language-console .language-bash {
+  color: var(--k-ink);
+}
+
+/* The default UI's icons are dark-grey SVG images; lighten them on a dark page. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .home-link,
+  :root:not([data-theme="light"]) .nav-toggle,
+  :root:not([data-theme="light"]) .nav-item-toggle,
+  :root:not([data-theme="light"]) .nav-panel-explore .context .version::after,
+  :root:not([data-theme="light"]) .page-versions .version-menu-toggle {
+    filter: invert(0.85);
+  }
+}
+
+:root[data-theme="dark"] .home-link,
+:root[data-theme="dark"] .nav-toggle,
+:root[data-theme="dark"] .nav-item-toggle,
+:root[data-theme="dark"] .nav-panel-explore .context .version::after,
+:root[data-theme="dark"] .page-versions .version-menu-toggle {
+  filter: invert(0.85);
+}
+
+/* Search results (@antora/lunr-extension). Its search.css is added to the page at runtime, after
+   this file, so these selectors carry an extra "body" to win. */
+body .search-result-dataset {
+  background: var(--k-paper);
+  border-color: var(--k-line-strong);
+  box-shadow: 0 2px 8px var(--k-shadow);
+}
+
+body .search-result-component-header {
+  color: var(--k-ink);
+  border-bottom-color: var(--k-line);
+}
+
+body .search-result-document-title {
+  color: var(--k-ink);
+  border-right-color: var(--k-line);
+}
+
+body .search-result-document-hit,
+body .search-result-document-hit .search-result-section-title {
+  color: var(--k-muted);
+}
+
+body .search-result-document-hit > a:hover {
+  background-color: var(--k-surface);
+}
+
+body .search-result-document-hit .search-result-highlight {
+  color: var(--k-accent-text);
+  background: var(--k-surface-strong);
+}
+
+body #search-field .filter {
+  background: var(--k-surface);
+  border-color: var(--k-line-strong);
+  color: var(--k-muted);
+}
+
+/* ---- Home page ---------------------------------------------------------------------------- */
+
+main.home {
+  padding: 0 1rem 4rem;
+}
+
+main.home .doc {
+  max-width: 76rem;
+  margin: 0 auto;
+  padding: 0;
+  font-size: 1.0625rem;
+}
+
+main.home .doc p {
+  hyphens: manual;
+}
+
+/* The name and mark, large, above the pitch. The h1 holds the page's name for screen readers;
+   the drawing itself is decorative. */
+.doc h1.k-hero-lockup {
+  margin: 4.5rem 0 0;
+  padding: 0;
+  line-height: 0;
+}
+
+.k-hero-lockup .k-lockup {
+  width: min(29.25rem, 100%);
+  height: auto;
+}
+
+.k-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* Band 1: pitch */
+.doc .hero {
+  padding: 2.5rem 0 2.5rem;
+}
+
+.doc .hero .pitch p {
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin: 0;
+  max-width: 18ch;
+}
+
+.doc .hero .lead p {
+  color: var(--k-muted);
+  font-size: 1.25rem;
+  line-height: 1.5;
+  margin-top: 1.25rem;
+  max-width: 40rem;
+}
+
+.doc .hero .actions p {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 2rem;
+}
+
+.doc a.button {
+  display: inline-block;
+  padding: 0.6rem 1.15rem;
+  border-radius: 6px;
+  background: var(--k-accent);
+  color: var(--k-on-accent);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.doc a.button:hover {
+  background: var(--k-accent-hover);
+  color: var(--k-paper);
+}
+
+.doc a.button.secondary {
+  background: transparent;
+  color: var(--k-ink);
+  box-shadow: inset 0 0 0 1px var(--k-line-strong);
+}
+
+.doc a.button.secondary:hover {
+  box-shadow: inset 0 0 0 1px var(--k-ink);
+}
+
+/* Band 2: the manifest beside a real terminal session. Each block is drawn as a small window,
+   a title bar with an icon over the code, so side by side the two stretch to the same height. */
+.doc .demo > .content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 34rem), 1fr));
+  gap: 1rem;
+}
+
+.doc .demo .listingblock {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  border: 1px solid var(--k-line-strong);
+  border-radius: 8px;
+  background: var(--k-surface);
+  overflow: hidden;
+}
+
+.doc .demo .listingblock > .title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid var(--k-line);
+  background: var(--k-surface-strong);
+  color: var(--k-muted);
+  font-family: var(--k-font-mono);
+  font-size: 0.8125rem;
+  font-style: normal;
+}
+
+.doc .demo .listingblock > .title::before {
+  content: "";
+  flex: none;
+  width: 1rem;
+  height: 1rem;
+  background: var(--k-accent);
+  -webkit-mask: var(--k-icon) center / contain no-repeat;
+  mask: var(--k-icon) center / contain no-repeat;
+}
+
+/* A file with TOML's table brackets on it, and a terminal prompt. */
+.doc .demo .manifest {
+  --k-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3.75 1.75h5.5l3 3v9.5h-8.5z M9.25 1.75v3h3 M6.75 7.5h-1v4.25h1 M9.25 7.5h1v4.25h-1'/%3E%3C/svg%3E");
+}
+
+.doc .demo .terminal {
+  --k-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M1.75 2.75h12.5v10.5H1.75z M4.5 6.25l2 1.75-2 1.75 M8.25 10h3.25'/%3E%3C/svg%3E");
+}
+
+.doc .demo .listingblock > .content {
+  flex: 1;
+}
+
+.doc .demo pre.highlight,
+.doc .demo pre.highlight > code {
+  height: 100%;
+  margin: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.doc .demo pre.highlight > code {
+  font-size: 0.78rem;
+  line-height: 1.6;
+  padding: 1rem 1.25rem;
+}
+
+/* Band 3: install */
+.doc .install {
+  margin-top: 3.5rem;
+}
+
+.doc .install h2 {
+  border-bottom: 0;
+  margin-top: 0;
+}
+
+/* Band 4: four short cards */
+.doc .cards ul {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
+  gap: 1rem;
+  list-style: none;
+  margin: 3.5rem 0 0;
+  padding: 0;
+}
+
+/* The default UI spaces list items with li + li { margin-top }; in a grid that pushes every card
+   but the first down. */
+.doc .cards li,
+.doc .cards li + li {
+  margin: 0;
+  padding: 1.1rem 1.2rem;
+  border: 1px solid var(--k-line);
+  border-radius: 8px;
+  background: var(--k-surface);
+  color: var(--k-muted);
+  line-height: 1.5;
+}
+
+.doc .cards li p {
+  margin: 0;
+}
+
+.doc .cards .card-title {
+  display: block;
+  margin-bottom: 0.35rem;
+  font-weight: 700;
+}
+
+.doc .cards .card-title a {
+  color: var(--k-ink);
+  text-decoration: none;
+}
+
+.doc .cards .card-title a::before {
+  content: "";
+  display: inline-block;
+  width: 1.15em;
+  height: 1.15em;
+  margin-right: 0.45em;
+  vertical-align: -0.2em;
+  background: var(--k-accent);
+  -webkit-mask: var(--k-icon) center / contain no-repeat;
+  mask: var(--k-icon) center / contain no-repeat;
+}
+
+/* One icon per pillar: the manifest is a document, interop is a link, the lockfile is a lock,
+   transparency is seeing what ran. */
+.doc .cards .card-title.declarative {
+  --k-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3.75 1.75h5.5l3 3v9.5h-8.5z M9.25 1.75v3h3 M6 8.25h4 M6 11h4'/%3E%3C/svg%3E");
+}
+
+.doc .cards .card-title.interoperable {
+  --k-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6.75 9.25l2.5-2.5 M7.25 4.75l1-1a2.47 2.47 0 0 1 3.5 3.5l-1 1 M8.75 11.25l-1 1a2.47 2.47 0 0 1-3.5-3.5l1-1'/%3E%3C/svg%3E");
+}
+
+.doc .cards .card-title.reproducible {
+  --k-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3.75 7.25h8.5v7h-8.5z M5.5 7.25V5a2.5 2.5 0 0 1 5 0v2.25'/%3E%3C/svg%3E");
+}
+
+.doc .cards .card-title.transparent {
+  --k-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M1.5 8s2.5-4.75 6.5-4.75S14.5 8 14.5 8s-2.5 4.75-6.5 4.75S1.5 8 1.5 8z M10 8a2 2 0 1 1-4 0a2 2 0 0 1 4 0z'/%3E%3C/svg%3E");
+}
+
+.doc .cards .card-title a:hover {
+  color: var(--k-accent-text);
+}
+
+body.home footer.footer {
+  background: transparent;
+}

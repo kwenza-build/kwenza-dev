@@ -1,0 +1,83 @@
+name: Build and deploy
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  # The manual lives in the kwenza repo, and a docs change there doesn't trigger anything here.
+  # Rebuild daily, and on demand, so the published docs follow kwenza's main.
+  schedule:
+    - cron: '23 4 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      # The docs come from kwenza's main. A pull request here builds against the kwenza branch
+      # of the same name when one exists, so a change spanning both repos is checked before
+      # either side merges.
+      - name: Choose the kwenza ref
+        id: kwenza
+        env:
+          HEAD_REF: ${{ github.head_ref }}
+        run: |
+          ref=main
+          if [ -n "$HEAD_REF" ] && git ls-remote --exit-code --heads \
+              https://github.com/kwenza-build/kwenza.git "refs/heads/$HEAD_REF" > /dev/null; then
+            ref="$HEAD_REF"
+          fi
+          echo "Building the docs from kwenza-build/kwenza@$ref"
+          echo "ref=$ref" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: kwenza-build/kwenza
+          ref: ${{ steps.kwenza.outputs.ref }}
+          path: kwenza
+          persist-credentials: false
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      - name: Build the site
+        run: npx antora antora-playbook.yml
+
+      - if: github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          path: build/site
+
+  deploy:
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+    steps:
+      - uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
+
+      - id: deployment
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1

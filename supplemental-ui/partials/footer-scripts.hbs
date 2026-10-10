@@ -1,0 +1,6 @@
+<script id="site-script" src="{{{uiRootPath}}}/js/site.js" data-ui-root-path="{{{uiRootPath}}}"></script>
+<script src="{{{uiRootPath}}}/js/kwenza.js"></script>
+{{!-- No js/vendor/highlight.js: source blocks are highlighted at build time (lib/highlight.js). --}}
+{{#if env.SITE_SEARCH_PROVIDER}}
+{{> search-scripts}}
+{{/if}}
