@@ -10,3 +10,7 @@ https://github.com/kwenza-build/kwenza/blob/main/docs/research/kwenza-dev-design
 * Antora's default UI plus a small supplemental UI with kwenza's brand;
 * `@antora/lunr-extension` for client-side search;
 * deployment to GitHub Pages through GitHub Actions, served on the `kwenza.dev` domain.
+
+== License
+
+Apache License 2.0, the same as kwenza itself. See link:LICENSE[LICENSE].
