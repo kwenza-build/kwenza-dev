@@ -61,11 +61,11 @@ xref:docs::getting-started.adoc#_installing_kwenza[More on installing]
 
 // Band 4: why. One sentence each, each linking to the page that backs it up.
 [.cards]
-* [.card-title]#xref:docs::manifest-reference.adoc[Declarative]#
+* [.card-title.declarative]#xref:docs::manifest-reference.adoc[Declarative]#
 The manifest is data. It never runs, so reading it tells you everything.
-* [.card-title]#xref:docs::architecture.adoc[Interoperable]#
+* [.card-title.interoperable]#xref:docs::architecture.adoc[Interoperable]#
 Maven Central, `~/.m2`, `src/main/java`. Your IDE and cache keep working.
-* [.card-title]#xref:docs::manifest-reference.adoc#_kwenza_lock[Reproducible]#
+* [.card-title.reproducible]#xref:docs::manifest-reference.adoc#_kwenza_lock[Reproducible]#
 `kwenza.lock` wins by default. No network unless your dependencies changed.
-* [.card-title]#xref:docs::cli-reference.adoc#output[Transparent]#
+* [.card-title.transparent]#xref:docs::cli-reference.adoc#output[Transparent]#
 Every command prints what it actually ran.
