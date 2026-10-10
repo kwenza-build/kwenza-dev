@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+{{> head defaultPageTitle='kwenza'}}
+  </head>
+  {{!-- The landing page: the default layout's header and footer, but no nav, toolbar or TOC. --}}
+  <body class="home">
+{{> header}}
+<main class="home">
+  <article class="doc">
+{{{page.contents}}}
+  </article>
+</main>
+{{> footer}}
+  </body>
+</html>

@@ -1,0 +1,4 @@
+# The landing page. A component named ROOT publishes at the site root, with no name segment.
+name: ROOT
+title: Home
+version: ~

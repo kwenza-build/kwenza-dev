@@ -1,0 +1,5 @@
+/node_modules/
+/build/
+/.cache/
+# The kwenza repo, checked out here by CI (or cloned/symlinked here for a local build).
+/kwenza

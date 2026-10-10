@@ -1,0 +1,71 @@
+= kwenza
+:page-layout: home
+:page-role: home
+:description: kwenza is a simple, declarative build tool for the JVM.
+// Keeps the home page out of search results; it only repeats what the docs say.
+:noindex:
+
+// Band 1: the pitch. Every claim here has to be true of kwenza today. No speed claims until the
+// benchmarks back them for the case a visitor would assume.
+[.hero]
+--
+[.pitch]
+A simple, declarative build tool for the JVM.
+
+[.lead]
+Your build is a TOML file, not a program.
+Real Maven Central dependencies, your existing `~/.m2` cache, standard `src/main/java`.
+
+[.actions]
+xref:docs::getting-started.adoc[Get started,role=button] xref:docs::manifest-reference.adoc[Read the manifest reference,role=button secondary]
+--
+
+// Band 2: the first 30 seconds. Both blocks are included from the kwenza repo, never pasted:
+// kwenza's CI checks that kwenza-run.txt is exactly what `kwenza run` prints for this example.
+[.demo]
+--
+[.manifest]
+.kwenza.toml
+[source,toml]
+----
+include::docs::example$hello-world/kwenza.toml[lines=1..8]
+----
+
+[.terminal]
+.Terminal
+[source,console]
+----
+$ kwenza run
+include::docs::example$hello-world/kwenza-run.txt[]
+----
+--
+
+// Band 3: install. Only channels that exist go here. Homebrew, install.sh, Scoop, mise and asdf
+// get added (as OS / version-manager tabs) as each one ships.
+[.install]
+--
+[discrete]
+== Install
+
+kwenza needs JDK 21 or newer. Until the first release is packaged, build it from source:
+
+[source,bash]
+----
+git clone https://github.com/kwenza-build/kwenza.git && cd kwenza
+./bootstrap.sh && bin/kwenza package
+export PATH="$PWD/bin:$PATH"
+----
+
+xref:docs::getting-started.adoc#_installing_kwenza[More on installing]
+--
+
+// Band 4: why. One sentence each, each linking to the page that backs it up.
+[.cards]
+* [.card-title]#xref:docs::manifest-reference.adoc[Declarative]#
+The manifest is data. It never runs, so reading it tells you everything.
+* [.card-title]#xref:docs::architecture.adoc[Interoperable]#
+Maven Central, `~/.m2`, `src/main/java`. Your IDE and cache keep working.
+* [.card-title]#xref:docs::manifest-reference.adoc#_kwenza_lock[Reproducible]#
+`kwenza.lock` wins by default. No network unless your dependencies changed.
+* [.card-title]#xref:docs::cli-reference.adoc#output[Transparent]#
+Every command prints what it actually ran.

@@ -1,0 +1,16 @@
+{
+  "name": "kwenza-dev",
+  "private": true,
+  "description": "Source for https://kwenza.dev: the Antora playbook, UI overlay and home page.",
+  "license": "Apache-2.0",
+  "scripts": {
+    "build": "antora antora-playbook.yml"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@antora/lunr-extension": "1.0.0-alpha.13",
+    "antora": "3.2.1"
+  }
+}

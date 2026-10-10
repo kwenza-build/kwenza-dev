@@ -1,0 +1,35 @@
+# Builds https://kwenza.dev. Two content sources:
+#  - home/ in this repo: the landing page (component ROOT, so it publishes at the site root);
+#  - docs/ in the kwenza repo: the manual (component "docs", published under /docs/).
+# CI checks kwenza out into ./kwenza first (see .github/workflows/deploy.yml); for a local build,
+# clone or symlink a kwenza checkout there yourself (see README.adoc).
+site:
+  title: kwenza
+  url: https://kwenza.dev
+content:
+  sources:
+  - url: .
+    branches: HEAD
+    start_path: home
+    edit_url: https://github.com/kwenza-build/kwenza-dev/edit/main/{path}
+  - url: ./kwenza
+    branches: HEAD
+    start_path: docs
+    edit_url: https://github.com/kwenza-build/kwenza/edit/main/{path}
+ui:
+  bundle:
+    # Antora's default UI, vendored so the build never depends on GitLab and kwenza.css always
+    # overrides the exact stylesheet it was written against. See README.adoc to update it.
+    url: ./ui/ui-bundle.zip
+  supplemental_files: ./supplemental-ui
+runtime:
+  log:
+    # Fail the build on warnings too, so a broken xref or include never ships.
+    failure_level: warn
+antora:
+  extensions:
+  - require: '@antora/lunr-extension'
+asciidoc:
+  attributes:
+    page-pagination: ''
+    hide-uri-scheme: ''
