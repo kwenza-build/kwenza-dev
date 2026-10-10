@@ -1,0 +1,12 @@
+# Keeps the site's build dependencies current: the GitHub Actions in its workflows, and its npm
+# packages (Antora and its extensions) once package.json exists.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly

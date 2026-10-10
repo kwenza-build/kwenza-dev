@@ -1,0 +1,12 @@
+= kwenza.dev
+
+Source for https://kwenza.dev, the home page and documentation site for
+https://github.com/kwenza-build/kwenza[kwenza], a simple, declarative build tool for the JVM.
+
+Nothing is built here yet. The planned setup is described in kwenza's
+https://github.com/kwenza-build/kwenza/blob/main/docs/research/kwenza-dev-design.adoc[site design research]:
+
+* an https://antora.org[Antora] site whose content comes from the kwenza repo's `docs/` directory;
+* Antora's default UI plus a small supplemental UI with kwenza's brand;
+* `@antora/lunr-extension` for client-side search;
+* deployment to GitHub Pages through GitHub Actions, served on the `kwenza.dev` domain.
