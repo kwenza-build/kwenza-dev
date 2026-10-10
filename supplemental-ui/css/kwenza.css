@@ -435,11 +435,16 @@ footer.footer {
 
 .hljs-section,
 .hljs-selector-id,
-.hljs-title,
-.hljs-attr {
+.hljs-title {
   color: var(--k-hl-title);
 }
 
+/* TOML table headers ([package], [dependencies]): the brackets the logo is drawn from. */
+.hljs-section {
+  font-weight: 600;
+}
+
+.hljs-attr,
 .hljs-class .hljs-title,
 .hljs-type,
 .hljs-built_in,
@@ -452,6 +457,20 @@ footer.footer {
 .hljs-bullet,
 .hljs-symbol {
   color: var(--k-hl-symbol);
+}
+
+/* Shell sessions ([source,console]): the prompt in the accent, the command in ink, and the
+   command's output muted, so it's clear at a glance what was typed and what kwenza printed. */
+.doc code.language-console {
+  color: var(--k-muted);
+}
+
+.doc code.language-console .hljs-meta.prompt_ {
+  color: var(--k-accent-text);
+}
+
+.doc code.language-console .language-bash {
+  color: var(--k-ink);
 }
 
 /* The default UI's icons are dark-grey SVG images; lighten them on a dark page. */

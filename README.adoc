@@ -14,6 +14,9 @@ https://github.com/kwenza-build/kwenza/blob/main/docs/research/kwenza-dev-design
 * `supplemental-ui/`: kwenza's overlay on the default UI. The header, footer, favicon links, the
   home page layout, and `css/kwenza.css` (brand tokens and a dark mode that follows the OS).
   IBM Plex Mono is self-hosted for code (SIL Open Font License, `fonts/IBMPlexMono-OFL.txt`).
+* `lib/highlight.js`: highlights source blocks at build time with the full `highlight.js` npm
+  package (the default UI's in-browser copy has no TOML grammar), so pages ship highlighted HTML
+  and load no highlighting script.
 * `.github/workflows/deploy.yml`: builds on every pull request; on `main`, daily, and on demand
   it also deploys to GitHub Pages.
 

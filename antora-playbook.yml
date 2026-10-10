@@ -30,6 +30,8 @@ antora:
   extensions:
   - require: '@antora/lunr-extension'
 asciidoc:
+  extensions:
+  - ./lib/highlight.js
   attributes:
     page-pagination: ''
     hide-uri-scheme: ''
