@@ -28,7 +28,7 @@ xref:docs::getting-started.adoc[Get started,role=button] xref:docs::manifest-ref
 .kwenza.toml
 [source,toml]
 ----
-include::docs::example$hello-world/kwenza.toml[lines=1..9]
+include::docs::example$hello-world/kwenza.toml[tag=home]
 ----
 
 [.terminal]
