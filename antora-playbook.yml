@@ -11,7 +11,7 @@ content:
   - url: .
     branches: HEAD
     start_path: home
-    edit_url: https://github.com/kwenza-build/kwenza-dev/edit/main/{path}
+    edit_url: false
   - url: ./kwenza
     branches: HEAD
     start_path: docs
