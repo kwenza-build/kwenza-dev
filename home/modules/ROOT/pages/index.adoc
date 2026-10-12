@@ -14,7 +14,6 @@ A simple, declarative build tool for the JVM.
 
 [.lead]
 Your build is a TOML file, not a program.
-Real Maven Central dependencies, your existing `~/.m2` cache, standard `src/main/java`.
 
 [.actions]
 xref:docs::getting-started.adoc[Get started,role=button] xref:docs::manifest-reference.adoc[Read the manifest reference,role=button secondary]
