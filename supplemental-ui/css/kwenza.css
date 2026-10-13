@@ -331,6 +331,12 @@ body #search-input:focus {
 }
 
 /* Left nav */
+/* The default UI forces a scrollbar on the tree (overflow-y: scroll), which shows as an empty
+   light strip beside it wherever the OS draws permanent scrollbars. Only show one when needed. */
+.nav-panel-menu {
+  overflow-y: auto;
+}
+
 .nav,
 .nav-panel-explore {
   background: var(--k-surface);
