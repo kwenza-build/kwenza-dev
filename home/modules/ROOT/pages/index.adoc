@@ -1,7 +1,7 @@
 = kwenza
 :page-layout: home
 :page-role: home
-:description: kwenza is a simple, declarative build tool for the JVM.
+:description: Your build is a TOML file, not a program.
 // Keeps the home page out of search results; it only repeats what the docs say.
 :noindex:
 
